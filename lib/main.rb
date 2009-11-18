@@ -1,3 +1,3 @@
 get "/" do
-  "Hello from sinatra"
+  erb :index
 end

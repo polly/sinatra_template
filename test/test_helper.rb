@@ -1,8 +1,7 @@
-require 'rubygems'
-require 'sinatra'
-require 'rack/test'
+require File.join(File.dirname(__FILE__), '..', 'init')
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'main.rb')
+require 'rubygems'
+require 'rack/test'
 
 Sinatra::Application.set(
   :environment => :test,

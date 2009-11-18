@@ -1,4 +1,5 @@
 require "rake"
+require "rake/testtask"
 
 namespace "vendor" do
   desc "Unpack gems into the vendor directory, usage: vendor:gem[some_gem]"
@@ -31,4 +32,10 @@ namespace "freeze" do
     rm Dir["vendor/sinatra/rack*.gem"]
     rm Dir["vendor/sinatra/sinatra*.gem"]
   end
+end
+
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/*_test.rb']
+  t.verbose = true
 end

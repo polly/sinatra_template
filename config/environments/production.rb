@@ -1,0 +1,3 @@
+Sinatra::Application.configure :production do
+  # Do production related setup...
+end

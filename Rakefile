@@ -7,28 +7,25 @@ namespace "vendor" do
     name, version = args[:name], args[:version]
     
     find_or_create_directory "vendor/gems"
-    cleanup                  "#{name}*"
-    fetch_and_unpack         name, version
-    cleanup                  "#{name}*.gem"
+    cleanup_vendor           "gems/#{name}*"
+    fetch_and_unpack         "vendor/gems", name, version
+    cleanup_vendor           "gems/#{name}*.gem"
   end
 end
 
 namespace "freeze" do
   desc "Freeze sinatra"
   task "sinatra" do
-    mkdir 'vendor/sinatra' unless File.exists? "vendor/sinatra"
-    mkdir 'vendor/sinatra' unless File.exists? "vendor/sinatra"
+    find_or_create_directory 'vendor/sinatra'
 
-    `rm -rf vendor/sinatra/rack*`
-    `rm -rf vendor/sinatra/sinatra*`
+    cleanup "sinatra/rack*"
+    cleanup "sinatra/sinatra*"
 
-    `cd vendor/sinatra && gem fetch rack`
-    `cd vendor/sinatra && gem unpack rack*.gem`
-    `cd vendor/sinatra && gem fetch  sinatra`
-    `cd vendor/sinatra && gem unpack sinatra*.gem`
+    fetch_and_unpack "vendor/sinatra", "rack"
+    fetch_and_unpack "vendor/sinatra", "sinatra"
 
-    rm Dir["vendor/sinatra/rack*.gem"]
-    rm Dir["vendor/sinatra/sinatra*.gem"]
+    cleanup "sinatra/rack*.gem"
+    cleanup "sinatra/sinatra*.gem"
   end
 end
 
@@ -45,15 +42,15 @@ def find_or_create_directory(dir)
   mkdir dir unless File.exists? dir
 end
 
-def cleanup(name)
-  `rm -rf vendor/gems/#{name}`
+def cleanup_vendor(name)
+  `rm -rf vendor/#{name}`
 end
 
-def fetch_and_unpack(name, version)
+def fetch_and_unpack(dir, name, version=nil)
   if version
-    `cd vendor/gems && gem fetch  #{name} -v #{version}`
+    `cd #{dir} && gem fetch  #{name} -v #{version}`
   else
-    `cd vendor/gems && gem fetch  #{name}`
+    `cd #{dir} && gem fetch  #{name}`
   end
 
   `cd vendor/gems && gem unpack #{name}*.gem`

@@ -53,5 +53,5 @@ def fetch_and_unpack(dir, name, version=nil)
     `cd #{dir} && gem fetch  #{name}`
   end
 
-  `cd vendor/gems && gem unpack #{name}*.gem`
+  `cd #{dir} && gem unpack #{name}*.gem`
 end

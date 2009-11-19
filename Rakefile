@@ -1,11 +1,14 @@
 require "rake"
 require "rake/testtask"
 
+desc "Run tests"
+task :default => ["test"]
+
 namespace "vendor" do
   desc "Unpack gems into the vendor directory, version is optional"
   task "gem", [:name, :version] do |t, args|
     name, version = args[:name], args[:version]
-    
+
     find_or_create_directory "vendor/gems"
     cleanup_vendor           "gems/#{name}*"
     fetch_and_unpack         "vendor/gems", name, version

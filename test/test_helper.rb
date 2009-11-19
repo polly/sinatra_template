@@ -2,6 +2,7 @@ require File.join(File.dirname(__FILE__), '..', 'init')
 
 require 'rubygems'
 require 'rack/test'
+require 'webrat'
 
 Sinatra::Application.set(
   :environment => :test,
@@ -10,24 +11,30 @@ Sinatra::Application.set(
   :logging => false
 )
 
+Webrat.configure do |config|
+  config.mode = :rack
+  config.application_port = 4567
+end
+
 module TestHelper
-  
+
   def app
     # change to your app class if using the 'classy' style
     # Sinatra::Application.new
     Sinatra::Application.new
   end
-  
+
   def body
     last_response.body
   end
-  
+
   def status
     last_response.status
   end
-  
-  include Rack::Test::Methods
 
+  include Rack::Test::Methods
+  include Webrat::Methods
+  include Webrat::Matchers
 end
 
 require 'test/unit'

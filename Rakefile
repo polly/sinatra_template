@@ -2,16 +2,14 @@ require "rake"
 require "rake/testtask"
 
 namespace "vendor" do
-  desc "Unpack gems into the vendor directory, usage: vendor:gem[some_gem]"
-  task "gem", [:gem_name] do |t, args|
-    mkdir 'vendor/gems' unless File.exists? "vendor/gems"
+  desc "Unpack gems into the vendor directory, version is optional"
+  task "gem", [:name, :version] do |t, args|
+    name, version = args[:name], args[:version]
     
-    `rm -rf vendor/gems/#{args[:gem_name]}*`
-
-    `cd vendor/gems && gem fetch  #{args[:gem_name]}`
-    `cd vendor/gems && gem unpack #{args[:gem_name]}*.gem`
-
-    rm Dir["vendor/gems/#{args[:gem_name]}*.gem"]
+    find_or_create_directory "vendor/gems"
+    cleanup                  "#{name}*"
+    fetch_and_unpack         name, version
+    cleanup                  "#{name}*.gem"
   end
 end
 
@@ -38,4 +36,25 @@ Rake::TestTask.new do |t|
   t.libs << "test"
   t.test_files = FileList['test/*_test.rb']
   t.verbose = true
+end
+
+
+private
+
+def find_or_create_directory(dir)
+  mkdir dir unless File.exists? dir
+end
+
+def cleanup(name)
+  `rm -rf vendor/gems/#{name}`
+end
+
+def fetch_and_unpack(name, version)
+  if version
+    `cd vendor/gems && gem fetch  #{name} -v #{version}`
+  else
+    `cd vendor/gems && gem fetch  #{name}`
+  end
+
+  `cd vendor/gems && gem unpack #{name}*.gem`
 end

@@ -21,14 +21,12 @@ namespace "freeze" do
   task "sinatra" do
     find_or_create_directory 'vendor/sinatra'
 
-    cleanup_vendor "sinatra/rack*"
-    cleanup_vendor "sinatra/sinatra*"
+    cleanup_vendor "sinatra/*"
 
     fetch_and_unpack "vendor/sinatra", "rack"
     fetch_and_unpack "vendor/sinatra", "sinatra"
 
-    cleanup_vendor "sinatra/rack*.gem"
-    cleanup_vendor "sinatra/sinatra*.gem"
+    cleanup_vendor "sinatra/*.gem"
   end
 end
 

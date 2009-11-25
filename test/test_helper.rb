@@ -1,8 +1,7 @@
 ENV['RACK_ENV'] = "test"
 
-require File.join(File.dirname(__FILE__), '..', 'init')
-
 require 'rubygems'
+require 'sinatra' 
 require 'rack/test'
 require 'webrat'
 
@@ -23,7 +22,7 @@ module TestHelper
   def app
     # change to your app class if using the 'classy' style
     # Sinatra::Application.new
-    Main.new
+    Sinatra::Application.new
   end
 
   def body
@@ -37,14 +36,6 @@ module TestHelper
   include Rack::Test::Methods
   include Webrat::Methods
   include Webrat::Matchers
-
-  def login_user(login, password)
-    user = User.create(:login => login, :password => password)
-    visit '/login'
-    fill_in 'user_login',    :with => login
-    fill_in 'user_password', :with => password
-    click_button 'submit'
-  end
 end
 
 require 'test/unit'
